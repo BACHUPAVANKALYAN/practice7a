@@ -37,16 +37,21 @@ app.get("/players/", async (request, response) => {
   const getplayerdetails = `
     SELECT * FROM player_details`;
   const getplayer = await database.all(getplayerdetails);
-  response.send(getplayer.map((eachplayer = getplayerdetails(eachplayer))));
+  response.send(
+    getplayer.map((eachplayer) => convertDBobjecttoserverObject(eachplayer))
+  );
 });
 app.get("/players/:playerId/", async (request, response) => {
-  const { playerId } = request.params;
+  const { playerName } = request.params;
   const getplayerdetails = `
-    SELECT * FROM player_details`;
+    SELECT player_name FROM player_details`;
   const getplayer = await database.all(getplayerdetails);
-  response.send(getplayer.map((eachplayer = getplayerdetails(eachplayer))));
+  response.send(
+    getplayer.map((eachplayer) => convertDBobjecttoserverObject(eachplayer))
+  );
 });
 app.put("/players/:playerId/", async (request, response) => {
+  const { playerId } = request.params;
   const { playerName } = request.body;
   const getplayerdetails = `
     UPDATE player_details SET  player_name='${playerName}'; WHERE player_id=${playerId}`;
@@ -58,7 +63,7 @@ app.get("/matches/:matchId/", async (request, response) => {
   const getplayerdetails = `
     SELECT * FROM match_details`;
   const getplayer = await database.all(getplayerdetails);
-  response.send(convertDBobjecttoserverObject(getplayer));
+  response.send("Player Details Updated");
 });
 app.get("/players/:playerId/matches", async (request, response) => {
   const { playerId } = request.params;
@@ -66,7 +71,7 @@ app.get("/players/:playerId/matches", async (request, response) => {
     SELECT * FROM player_match_score NATURAL JOIN match_details WHERE player_id=${playerId};`;
   const getplayer = await database.all(getplayerdetails);
   response.send(
-    getplayer.map((eachplayer = convertDBobjecttoserverObject(eachplayer)))
+    getplayer.map((eachplayer) => convertDBobjecttoserverObject(eachplayer))
   );
 });
 app.get("/matches/:matchId/players", async (request, response) => {
